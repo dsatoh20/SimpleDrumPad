@@ -5,7 +5,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 # from kivy.uix.label import Label
 from kivy.core.audio import SoundLoader
-from threading import Thread
 
 
 class PadApp(App):
