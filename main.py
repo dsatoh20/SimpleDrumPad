@@ -1,11 +1,9 @@
 from kivy.app import App
-# from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
-# from kivy.uix.label import Label
-from kivy.core.audio import SoundLoader
-
+from pydub import AudioSegment
+import simpleaudio as sa
 
 class PadApp(App):
     def __init__(self, **kwargs):
@@ -18,24 +16,18 @@ class PadApp(App):
             'O-Hi-Hat': self.load_sound('source/hi-hat-one-shot-open-decay_130bpm_D_major-converted.wav'),
             'Crush': self.load_sound('source/punchy-cymbal-crash-drum-hit-converted.wav'),
         }
+        self.playbacks = {}
     
     def load_sound(self, filepath):
-        sound = SoundLoader.load(filepath)
-        if sound:
-            sound.load()
-            return sound
-        else:
-            print(f"Error loading sound: {filepath}")
-            return None
+        return AudioSegment.from_wav(filepath)
         
     def build(self):
-        
         root_widget = BoxLayout(orientation='vertical')
         
         button_symbols = ('Empty', 'Empty', 'Snare', 'O-Hi-Hat', 'Crush',
-                          'Kick', 'Kick', 'Snare', 'C-Hi-Hat','C-Hi-Hat')
+                          'Kick', 'Kick', 'Snare', 'C-Hi-Hat', 'C-Hi-Hat')
         
-        button_grid = (GridLayout(cols=5, size_hint_y=2))
+        button_grid = GridLayout(cols=5, size_hint_y=2)
         for symbol in button_symbols:
             button = Button(text=symbol)
             button.bind(on_press=self.play)
@@ -44,17 +36,22 @@ class PadApp(App):
         root_widget.add_widget(button_grid)
         
         return root_widget
+    
     def play_sound(self, symbol):
         if symbol in self.sounds and self.sounds[symbol]:
+            if symbol == "C-Hi-Hat" and 'O-Hi-Hat' in self.playbacks:
+                self.playbacks['O-Hi-Hat'].stop()
             sound = self.sounds[symbol]
-            if symbol == "C-Hi-Hat" and self.sounds["O-Hi-Hat"].state == 'play':
-                self.sounds["O-Hi-Hat"].stop()
-            sound.play()
-            print(self.sounds[symbol])
-            
+            playback = sa.play_buffer(
+                sound.raw_data,
+                num_channels=sound.channels,
+                bytes_per_sample=sound.sample_width,
+                sample_rate=sound.frame_rate
+            )
+            print(f"Playing sound: {symbol}")
+    
     def play(self, instance):
         self.play_sound(instance.text)
-        
         
 if __name__ == '__main__':
     PadApp().run()
