@@ -1,0 +1,6 @@
+*.wav
+bin
+logs
+.buildozer
+sub.py
+
