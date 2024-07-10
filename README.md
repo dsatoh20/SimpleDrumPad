@@ -1,7 +1,7 @@
-# Simple Drum Pad for Android
+# Simple Sample Pad for Android
 
 ## Description
-Simple drum pad application for Android by kivy.
+Simple Sample pad application for Android by kivy.
 
 ## Demo
 [Drum Pad APK](https://drive.google.com/file/d/1o6HX-zIUIE8tbY5ULUTTzIVyRfvEkYv3/view?usp=sharing)
